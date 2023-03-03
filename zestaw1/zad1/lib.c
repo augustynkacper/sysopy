@@ -6,7 +6,7 @@
 BlocksArray* create_block_array(int l){
 
     BlocksArray* res;
-    res = calloc(1, sizeof(BlocksArray));
+    res = malloc(sizeof(BlocksArray));
 
     res->max_length = l;
     res->current_length = 0;
@@ -60,7 +60,15 @@ void count_file_stats(BlocksArray* ba, char* filename){
 
 }
 
-/*
+
+Block* get_block(BlocksArray* ba, int i){
+    if (i >= ba->current_length){
+        return NULL;
+    }
+    return ba->blocks[i];
+}
+
+
 int main(){
     
     BlocksArray* ba = create_block_array(5);
@@ -74,8 +82,9 @@ int main(){
     printf("%s\n", ba->blocks[2]->filename);
     printf("%d\n", ba->current_length);
 
+    printf("%s", get_block(ba, 4)->filename);
+
 
     return 0;
 }
 
-*/

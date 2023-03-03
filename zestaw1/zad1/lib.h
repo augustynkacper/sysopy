@@ -19,4 +19,6 @@ BlocksArray* create_array(int);
 
 void count_file_stats(BlocksArray*, char*);
 
+Block* get_block(BlocksArray*, int);
+
 #endif
