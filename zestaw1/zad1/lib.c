@@ -15,6 +15,14 @@ BlocksArray* create_block_array(int l){
     return res;
 }
 
+int find_index(BlocksArray* ba){
+    int i=0;
+    while (i<ba->max_length && ba->blocks[i]!=NULL) { 
+        i++;
+    }
+    return i;
+}
+
 void count_file_stats(BlocksArray* ba, char* filename){
 
     char* c1 = "wc "; // first part of a command
@@ -50,14 +58,28 @@ void count_file_stats(BlocksArray* ba, char* filename){
     block->chars=chars;
     block->filename=filename;
 
-    int index = ba->current_length;
+    int index = find_index(ba);
 
     ba->blocks[index] = block;
     ba->current_length++;
 
     system("rm -r tmp/*");
+}
 
+void free_blocks_array(BlocksArray* ba){
+    for (int i=0; i<ba->current_length; i++){
+        free(ba->blocks[i]->filename);
+        free(ba->blocks[i]);
+        ba->blocks[i]=NULL;
+    }
+    free(ba->blocks);
+    ba->blocks = NULL;
+}
 
+void free_block(BlocksArray* ba, int index){
+    free(ba->blocks[index]->filename);
+    free(ba->blocks[index]);
+    ba->current_length--;
 }
 
 

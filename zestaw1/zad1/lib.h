@@ -21,4 +21,6 @@ void count_file_stats(BlocksArray*, char*);
 
 Block* get_block(BlocksArray*, int);
 
+void free_blocks_array(BlocksArray*);
+
 #endif
