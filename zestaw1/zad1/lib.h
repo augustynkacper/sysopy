@@ -23,4 +23,6 @@ Block* get_block(BlocksArray*, int);
 
 void free_blocks_array(BlocksArray*);
 
+void free_block(BlocksArray*, int);
+
 #endif

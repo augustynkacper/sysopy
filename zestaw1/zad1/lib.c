@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <dirent.h>
 
 BlocksArray* create_block_array(int l){
 
@@ -33,24 +34,32 @@ void count_file_stats(BlocksArray* ba, char* filename){
     strcat(command, filename);
     strcat(command, c2);  
 
-    // at this point we have wc command ready
+    // if tmp directory doesnt exists, create one
+    DIR* dir = opendir("tmp");
+    if(!dir) {
+        system("mkdir tmp");
+        printf("created directory\n");
+    }
 
+    // run command
     system(command);
-
+    
     // reading from file
     FILE* file_stream;
-    char* tmp_txt=calloc(100, sizeof(char));  // variable which stores wc result
     file_stream = fopen("tmp/tmp.txt", "r");
+
+    char* tmp_txt=calloc(100, sizeof(char));  // variable which stores wc result
     fgets(tmp_txt, 100, file_stream);
 
     fclose(file_stream);
 
+    // get info about files to relevant variables
     char* p;
-
     int lines=strtol(strtok(tmp_txt, " "),&p,10), 
         words=strtol(strtok(NULL, " "),&p,10), 
         chars=strtol(strtok(NULL, " "),&p,10);
 
+    // create a new block
     Block* block = calloc(1, sizeof(Block));
 
     block->lines=lines;
@@ -58,39 +67,58 @@ void count_file_stats(BlocksArray* ba, char* filename){
     block->chars=chars;
     block->filename=filename;
 
+    // add block to blocks array
     int index = find_index(ba);
 
     ba->blocks[index] = block;
     ba->current_length++;
 
+    // remove tmp file
     system("rm -r tmp/*");
 }
 
 void free_blocks_array(BlocksArray* ba){
+    // free every block in blocks array
     for (int i=0; i<ba->current_length; i++){
-        free(ba->blocks[i]->filename);
         free(ba->blocks[i]);
         ba->blocks[i]=NULL;
     }
+    // free the array pointer
     free(ba->blocks);
     ba->blocks = NULL;
+
+    ba->current_length=0;
 }
 
 void free_block(BlocksArray* ba, int index){
-    free(ba->blocks[index]->filename);
+    if (index<0 || index >= ba->max_length){
+        fprintf(stderr, "Given index out of array bounds!");
+        return;
+    }
+    if (ba->blocks[index]==NULL){
+        fprintf(stderr, "Block doesn't exist!");
+        return;
+    }
     free(ba->blocks[index]);
+    ba->blocks[index] = NULL;
+
     ba->current_length--;
 }
 
 
 Block* get_block(BlocksArray* ba, int i){
-    if (i >= ba->current_length){
+    if (i<0 || i >= ba->max_length){
+        fprintf(stderr, "Given index out of array bounds!");
         return NULL;
     }
+    if (ba->blocks[i]==NULL) {
+        return NULL;
+    }
+
     return ba->blocks[i];
 }
 
-
+/*
 int main(){
     
     BlocksArray* ba = create_block_array(5);
@@ -104,9 +132,11 @@ int main(){
     printf("%s\n", ba->blocks[2]->filename);
     printf("%d\n", ba->current_length);
 
-    printf("%s", get_block(ba, 4)->filename);
+    
 
-
+    free_blocks_array(ba);
+    
+    printf("%d\n", ba->current_length);
     return 0;
 }
-
+*/
