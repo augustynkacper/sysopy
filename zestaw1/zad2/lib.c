@@ -5,7 +5,6 @@
 #include <dirent.h>
 
 BlocksArray* create_blocks_array(int l){
-
     BlocksArray* res;
     res = malloc(sizeof(BlocksArray));
 
@@ -79,7 +78,10 @@ void count_file_stats(BlocksArray* ba, char* filename){
 
 void free_blocks_array(BlocksArray* ba){
     // free every block in blocks array
-    for (int i=0; i<ba->current_length; i++){
+    for (int i=0; i<ba->max_length; i++){
+        if (ba->blocks[i]==NULL){
+            continue;
+        }
         free(ba->blocks[i]);
         ba->blocks[i]=NULL;
     }
@@ -108,29 +110,30 @@ void free_block(BlocksArray* ba, int index){
 
 Block* get_block(BlocksArray* ba, int i){
     if (i<0 || i >= ba->max_length){
-        fprintf(stderr, "Given index out of array bounds!");
+        printf("Given index out of array bounds!\n");
         return NULL;
     }
     if (ba->blocks[i]==NULL) {
+        printf("Array is empty at this index!\n");
         return NULL;
     }
-
     return ba->blocks[i];
 }
 
-
+/*
 int main(){
     
-    BlocksArray* ba = create_blocks_array(5);
+    BlocksArray* ba = NULL;
+
+    ba = create_blocks_array(5);
 
     count_file_stats(ba, "file1.txt");
-    count_file_stats(ba, "file2.txt");
-    count_file_stats(ba, "file3.txt");
+
 
     printf("%s\n", ba->blocks[0]->filename);
-    printf("%s\n", ba->blocks[1]->filename);
-    printf("%s\n", ba->blocks[2]->filename);
+
     printf("%d\n", ba->current_length);
+
 
     
 
@@ -139,4 +142,4 @@ int main(){
     printf("%d\n", ba->current_length);
     return 0;
 }
-
+*/
