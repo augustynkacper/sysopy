@@ -1,0 +1,107 @@
+
+>    Initialized array of size 5.
+
+   Operation execution times:
+   REAL_TIME: 0.000000s
+   USER_TIME: 0.000000s
+   SYSTEM_TIME: 0.000000s
+
+>    File info saved at index 0.
+
+   Operation execution times:
+   REAL_TIME: 0.010000s
+   USER_TIME: 0.000000s
+   SYSTEM_TIME: 0.000000s
+
+>    File info saved at index 1.
+
+   Operation execution times:
+   REAL_TIME: 0.000000s
+   USER_TIME: 0.000000s
+   SYSTEM_TIME: 0.000000s
+
+>    File info saved at index 2.
+
+   Operation execution times:
+   REAL_TIME: 0.000000s
+   USER_TIME: 0.000000s
+   SYSTEM_TIME: 0.000000s
+
+>    File info saved at index 3.
+
+   Operation execution times:
+   REAL_TIME: 0.010000s
+   USER_TIME: 0.000000s
+   SYSTEM_TIME: 0.000000s
+
+>    Block at index 0 found.
+  filename: ../zad1/lib.c, words: 379, lines: 157, chars: 3572
+
+   Operation execution times:
+   REAL_TIME: 0.000000s
+   USER_TIME: 0.000000s
+   SYSTEM_TIME: 0.000000s
+
+>    Block at index 1 found.
+  filename: ../zad1/lib.h, words: 42, lines: 27, chars: 456
+
+   Operation execution times:
+   REAL_TIME: 0.000000s
+   USER_TIME: 0.000000s
+   SYSTEM_TIME: 0.000000s
+
+>    Block at index 2 found.
+  filename: ../zad1/Makefile, words: 27, lines: 17, chars: 166
+
+   Operation execution times:
+   REAL_TIME: 0.000000s
+   USER_TIME: 0.000000s
+   SYSTEM_TIME: 0.000000s
+
+>    Block at index 3 found.
+  filename: ../zad2/main.c, words: 425, lines: 189, chars: 5040
+
+   Operation execution times:
+   REAL_TIME: 0.000000s
+   USER_TIME: 0.000000s
+   SYSTEM_TIME: 0.000000s
+
+>    Block at index 0 removed.
+
+   Operation execution times:
+   REAL_TIME: 0.000000s
+   USER_TIME: 0.000000s
+   SYSTEM_TIME: 0.000000s
+
+>    Block at index 1 removed.
+
+   Operation execution times:
+   REAL_TIME: 0.000000s
+   USER_TIME: 0.000000s
+   SYSTEM_TIME: 0.000000s
+
+>    Block at index 2 removed.
+
+   Operation execution times:
+   REAL_TIME: 0.000000s
+   USER_TIME: 0.000000s
+   SYSTEM_TIME: 0.000000s
+
+>    Block at index 3 removed.
+
+   Operation execution times:
+   REAL_TIME: 0.000000s
+   USER_TIME: 0.000000s
+   SYSTEM_TIME: 0.000000s
+
+>    Array memory freed.
+
+   Operation execution times:
+   REAL_TIME: 0.000000s
+   USER_TIME: 0.000000s
+   SYSTEM_TIME: 0.000000s
+
+>    Program stopped...
+
+
+-------------------

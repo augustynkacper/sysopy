@@ -6,6 +6,11 @@
 
 BlocksArray* create_blocks_array(int l){
 
+    if (l<1){
+        printf("   Enter correct size!\n");
+        return NULL;
+    }
+
     BlocksArray* res;
     res = malloc(sizeof(BlocksArray));
 
@@ -26,6 +31,23 @@ int find_index(BlocksArray* ba){
 }
 
 void count_file_stats(BlocksArray* ba, char* filename){
+
+    FILE* file = fopen(filename, "r");
+
+    if (file == NULL) {
+        printf("   File %s doesn't exist!\n", filename);
+        return;
+    }
+
+    if (ba == NULL){
+        printf("   Blocks Array wasn't initialized!\n");
+        return;
+    }
+
+    if(ba->max_length == ba->current_length){
+        printf("   Array is already full!\n");
+        return;
+    }
 
     char* c1 = "wc "; // first part of a command
     char* c2 = " > tmp/tmp.txt"; // second part of a command
@@ -81,6 +103,12 @@ void count_file_stats(BlocksArray* ba, char* filename){
 }
 
 void free_blocks_array(BlocksArray* ba){
+
+    if (ba == NULL){
+        printf("   Blocks Array wasn't initialized!\n");
+        return;
+    }
+
     // free every block in blocks array
     for (int i=0; i<ba->current_length; i++){
         free(ba->blocks[i]);
@@ -115,7 +143,7 @@ void free_block(BlocksArray* ba, int index){
 
 Block* get_block(BlocksArray* ba, int i){
     if (i<0 || i >= ba->max_length){
-        fprintf(stderr, "   Given index out of array bounds!");
+        printf("   Given index out of array bounds!");
         return NULL;
     }
     if (ba->blocks[i]==NULL) {
@@ -127,26 +155,3 @@ Block* get_block(BlocksArray* ba, int i){
     return ba->blocks[i];
 }
 
-/*
-int main(){
-    
-    BlocksArray* ba = create_blocks_array(5);
-
-    count_file_stats(ba, "file1.txt");
-    count_file_stats(ba, "file2.txt");
-    count_file_stats(ba, "file3.txt");
-
-    printf("%s\n", ba->blocks[0]->filename);
-    printf("%s\n", ba->blocks[1]->filename);
-    printf("%s\n", ba->blocks[2]->filename);
-    printf("%d\n", ba->current_length);
-
-    
-
-    free_blocks_array(ba);
-    
-    printf("%d\n", ba->current_length);
-    return 0;
-}
-
-*/

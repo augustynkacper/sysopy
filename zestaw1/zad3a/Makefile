@@ -25,14 +25,14 @@ test_static:
 	./run_static < commands.txt >> results_static.txt
 
 test_shared:
-	@echo "*** SHARED LIBRARY TEST ***" > results_static.txt
+	@echo "*** SHARED LIBRARY TEST ***" > results_shared.txt
 	./run_shared < commands.txt >> results_shared.txt
 
 test_dynamic:
-	@echo "*** DYNAMIC LIBRARY TEST ***" > results_static.txt
+	@echo "*** DYNAMIC LIBRARY TEST ***" > results_dynamic.txt
 	./run_dynamic < commands.txt >> results_dynamic.txt
 
 
 
 clean:
-	rm -rf *.o *.a *.o
+	rm -rf *.o *.a *.o *.so

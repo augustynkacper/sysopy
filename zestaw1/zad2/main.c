@@ -59,12 +59,19 @@ int format_argument(char* command, char* arg, int* argument){
 }
 
 
+int destroy(BlocksArray* blocks);
+int init(int size);
+int show(BlocksArray* blocks, int i);
+int delete(BlocksArray* blocks, int i);
+int count(BlocksArray* blocks, char* filename);
+
+
 // displaying execution times
-void print_exec_time(clock_t st_time, clock_t en_time, struct tms *buff_st_time, struct tms *buff_en_time){
+void print_exec_time(clock_t st_time, clock_t en_time, struct tms *tms_st_time, struct tms *tms_en_time){
     printf("\n   Operation execution times:\n");
     printf("   REAL_TIME: %fs\n", (double)(en_time-st_time)/(double) sysconf(_SC_CLK_TCK));
-    printf("   USER_TIME: %fs\n", (double)(buff_en_time->tms_utime-buff_st_time->tms_utime)/(double) sysconf(_SC_CLK_TCK));
-    printf("   SYSTEM_TIME: %fs\n", (double)(buff_en_time->tms_stime-buff_st_time->tms_stime)/(double) sysconf(_SC_CLK_TCK));
+    printf("   USER_TIME: %fs\n", (double)(tms_en_time->tms_cutime-tms_st_time->tms_cutime)/(double) sysconf(_SC_CLK_TCK));
+    printf("   SYSTEM_TIME: %fs\n", (double)(tms_en_time->tms_cstime-tms_st_time->tms_cstime)/(double) sysconf(_SC_CLK_TCK));
 }
 
 
@@ -100,7 +107,7 @@ int main(){
     BlocksArray* blocks = NULL;
 
     clock_t real_time_start, real_time_end;
-    struct tms buffer_time_start, buffer_time_end;
+    struct tms tms_time_start, tms_time_end;
 
     
     
@@ -125,29 +132,24 @@ int main(){
         if (format_argument(command, arg, &argument)==0)
             continue;
 
-        real_time_start = times(&buffer_time_start);
-
-        if (strcmp("destroy", command)==0 ){
-
-            if (blocks == NULL){
+        if (strcmp("destroy", command)==0 ||
+            strcmp("show", command)==0 ||
+            strcmp("count", command)==0 ||
+            strcmp("delete", command)==0){
                 printf("  BlocksArray wasn't initialized!\n");
                 continue;
-            }
+            } 
 
+        real_time_start = times(&tms_time_start);
+
+        if (strcmp("destroy", command)==0 ){
             free_blocks_array(blocks);
-
             free(blocks);
             blocks = NULL;
         }
 
         else if ( strcmp("count", command)==0 ){
-            if (blocks == NULL){
-                printf("  BlocksArray wasn't initialized!\n");
-                continue;
-            }
- 
             count_file_stats( blocks, arg);
-        
         }
 
         else if ( strcmp("init", command)==0 ){
@@ -155,36 +157,30 @@ int main(){
         }
 
         else if ( strcmp("show", command)==0 ){
-         
             Block* b = get_block(blocks, argument);
             
-            if (b==NULL){
+            if (b==NULL)
                 continue;
-            }
-
+            
             printf("  filename: %s, words: %d, lines: %d, chars: %d\n", 
                         b->filename, b->words, b->lines, b->chars);
         }
 
         else if ( strcmp("delete", command)==0 ){
-            if (blocks == NULL){
-                printf("  BlocksArray wasn't initialized!\n");
-                continue;
-            }
-
             free_block(blocks, argument);
-        } else if(strcmp("exit", command)!=0){
+        } 
+        
+        else if(strcmp("exit", command)!=0){
             printf("   Enter correct command!\n");
             continue;
         }
         
-        real_time_end = times(&buffer_time_end);
+        real_time_end = times(&tms_time_end);
   
         if (strcmp("exit", command)!=0)
             print_exec_time(real_time_start, real_time_end, 
-                            &buffer_time_start, &buffer_time_end);
+                            &tms_time_start, &tms_time_end);
         else {
-            printf("   Program stopped...\n\n\n-------------------");
             exit(0);
         }
     }
