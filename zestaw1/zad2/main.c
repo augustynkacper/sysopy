@@ -132,10 +132,10 @@ int main(){
         if (format_argument(command, arg, &argument)==0)
             continue;
 
-        if (strcmp("destroy", command)==0 ||
+        if ((strcmp("destroy", command)==0 ||
             strcmp("show", command)==0 ||
             strcmp("count", command)==0 ||
-            strcmp("delete", command)==0){
+            strcmp("delete", command)==0) && blocks==NULL){
                 printf("  BlocksArray wasn't initialized!\n");
                 continue;
             } 
