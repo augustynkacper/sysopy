@@ -11,6 +11,7 @@ shared:
 	gcc -shared lib.o -o sharedlib.so
 
 
+
 clean:
 	rm -rf *.o *.a *.so
 

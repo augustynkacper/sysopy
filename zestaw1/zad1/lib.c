@@ -38,7 +38,6 @@ void count_file_stats(BlocksArray* ba, char* filename){
     DIR* dir = opendir("tmp");
     if(!dir) {
         system("mkdir tmp");
-        printf("created directory\n");
     }
 
     // run command
@@ -65,7 +64,8 @@ void count_file_stats(BlocksArray* ba, char* filename){
     block->lines=lines;
     block->words=words;
     block->chars=chars;
-    block->filename=filename;
+    block->filename=calloc(100, sizeof(char));
+    strcpy(block->filename, filename);
 
     // add block to blocks array
     int index = find_index(ba);
@@ -92,11 +92,11 @@ void free_blocks_array(BlocksArray* ba){
 
 void free_block(BlocksArray* ba, int index){
     if (index<0 || index >= ba->max_length){
-        fprintf(stderr, "Given index out of array bounds!");
+        printf("  Given index out of array bounds!");
         return;
     }
     if (ba->blocks[index]==NULL){
-        fprintf(stderr, "Block doesn't exist!");
+        printf("   Block doesn't exist!");
         return;
     }
     free(ba->blocks[index]);
@@ -108,17 +108,18 @@ void free_block(BlocksArray* ba, int index){
 
 Block* get_block(BlocksArray* ba, int i){
     if (i<0 || i >= ba->max_length){
-        fprintf(stderr, "Given index out of array bounds!");
+        fprintf(stderr, "   Given index out of array bounds!");
         return NULL;
     }
     if (ba->blocks[i]==NULL) {
+        printf("   Array is empty at this index!\n");
         return NULL;
     }
-
+   
     return ba->blocks[i];
 }
 
-
+/*
 int main(){
     
     BlocksArray* ba = create_blocks_array(5);
@@ -140,3 +141,4 @@ int main(){
     return 0;
 }
 
+*/
