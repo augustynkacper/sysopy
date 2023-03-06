@@ -102,11 +102,13 @@ int main(){
     clock_t real_time_start, real_time_end;
     struct tms buffer_time_start, buffer_time_end;
 
-    char input[100];
+    
     
     char* command=calloc(100, sizeof(char));
     char* arg = calloc(100, sizeof(char));
     int argument;
+
+    char input[100];
 
     while ( strcmp("exit", command)!=0 ){
         printf("\n> ");
@@ -181,6 +183,10 @@ int main(){
         if (strcmp("exit", command)!=0)
             print_exec_time(real_time_start, real_time_end, 
                             &buffer_time_start, &buffer_time_end);
+        else {
+            printf("   Program stopped...\n\n\n-------------------");
+            exit(0);
+        }
     }
 
 

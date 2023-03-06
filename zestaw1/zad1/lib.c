@@ -13,6 +13,7 @@ BlocksArray* create_blocks_array(int l){
     res->current_length = 0;
     res->blocks = calloc(l, sizeof(Block));
 
+    printf("   Initialized array of size %d.\n", l);
     return res;
 }
 
@@ -75,6 +76,8 @@ void count_file_stats(BlocksArray* ba, char* filename){
 
     // remove tmp file
     system("rm -r tmp/*");
+
+    printf("   File info saved at index %d.\n", index);
 }
 
 void free_blocks_array(BlocksArray* ba){
@@ -88,6 +91,8 @@ void free_blocks_array(BlocksArray* ba){
     ba->blocks = NULL;
 
     ba->current_length=0;
+
+    printf("   Array memory freed.\n");
 }
 
 void free_block(BlocksArray* ba, int index){
@@ -103,6 +108,8 @@ void free_block(BlocksArray* ba, int index){
     ba->blocks[index] = NULL;
 
     ba->current_length--;
+
+    printf("   Block at index %d removed.\n", index);
 }
 
 
@@ -116,6 +123,7 @@ Block* get_block(BlocksArray* ba, int i){
         return NULL;
     }
    
+    printf("   Block at index %d found.\n", i);
     return ba->blocks[i];
 }
 
