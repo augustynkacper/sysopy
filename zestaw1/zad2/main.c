@@ -153,6 +153,10 @@ int main(){
         }
 
         else if ( strcmp("init", command)==0 ){
+            if (blocks!=NULL){
+                printf("   Array already initialized!\n");
+                continue;
+            }
             blocks = create_blocks_array(argument);
         }
 
