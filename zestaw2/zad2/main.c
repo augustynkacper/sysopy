@@ -3,9 +3,18 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define BLOCK_SIZE 1024;
+
+typedef int pid;
+pid x = 4;
 
 char *read_file;
 char *write_file;
+
+void print_time(clock_t start, clock_t end, FILE *f, char* v){
+    printf("%s execution time: %f\n", v, (double)(end - start) / CLOCKS_PER_SEC);
+    fprintf(f,"%s execution time: %f\n", v, (double)(end - start) / CLOCKS_PER_SEC);
+}
 
 int parse_input(int argc, char *argv[]){
     if ( argc != 3){
@@ -17,7 +26,7 @@ int parse_input(int argc, char *argv[]){
     return 1;
 }
 
-void read_by_1028blocks(){
+void reverse(int block_size){
 
     FILE *read, *write;
     read = fopen(read_file, "r");
@@ -29,67 +38,63 @@ void read_by_1028blocks(){
     }
 
 
-    char buffer[1024];
+    char buffer[block_size+1];
 
     // move pointer to the end of file
+    // and get file size
     fseek(read, 0L, SEEK_END);
 
-    // set position of a pointer
     fpos_t pos;
     fgetpos(read, &pos);
 
-    // count number of blocks of size 1024
-    int blocks = (pos + 1)/1024;
+    // get number of blocks of given size
+    int blocks = (pos+1)/block_size ;
+    int end;
 
     for (int i=blocks; i>=0; i--){
-        fseek(read, i*blocks, SEEK_SET);
-        fread(buffer, sizeof(char), 1024, read);
 
-        for (int j=1023;i>=0;j--){
-            if(buffer[j] != '\n' && buffer[j] != '\r' && buffer[j] != '\0') {
-                printf("%c", buffer[j]);
-            }
+        // move pointer
+        fseek(read, i*block_size, SEEK_SET);
+
+        // count how many chars were read, and 
+        // mark and of string
+        end = fread(buffer, sizeof(char), block_size, read);
+        buffer[end] = 0;
+
+        // read from end
+        for(int j=strlen(buffer)-1; j>=0; j--){
+            //printf("%c", buffer[j]);
+            fwrite(&buffer[j], 1, 1, write);
         }
     }
 
-
-
-
+    //printf("\n\n");
 }
 
-void read_one_by_one(){
-    FILE *read, *write;
-    read = fopen(read_file, "r");
-    write = fopen(write_file, "w");
-
-    if (read==NULL || write==NULL){
-        printf("Couldn't open a file!\n");
-        return;
-    }
-
-    fseek(read, -1, SEEK_END);
-    fpos_t pos;
-    fgetpos(read, &pos);
-
-    char c;
-    fread(&c, 1, 1, read);
-
-    for (long int i=pos; i>=0; i--){
-        fseek(read, i, SEEK_SET);
-        fread(&c, 1, 1, read);
-
-        fwrite(&c, 1, 1, write);
-    }
-
-}
 
 int main(int argc, char *argv[]){
 
     if (parse_input(argc, argv)!=1)
         return 0;
-    
-    read_by_1028blocks();
-    //read_one_by_one();
+
+    clock_t size_1_start, size_1_end;
+    clock_t size_1024_start, size_1024_end;
+
+
+    size_1_start = clock();
+    reverse(1);
+    size_1_end = clock();
+
+    size_1024_start = clock();
+    reverse(1);
+    size_1024_end = clock();
+
+
+    FILE* results_file;
+    results_file = fopen("pomiar_zad_2.txt", "w");
+
+    print_time(size_1_start, size_1_end, results_file, "blocks of size 1");
+    print_time(size_1024_start, size_1024_end, results_file, "blocks of size 1024");
 
     return 0;
 }

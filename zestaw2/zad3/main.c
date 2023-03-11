@@ -1,6 +1,5 @@
 #include <stdio.h>
- #include <dirent.h>
-
+#include <dirent.h>
 #include <sys/stat.h> 
 
 
@@ -24,12 +23,12 @@ int main(){
 
         // check if is directory
         if ( !S_ISDIR(file_stat.st_mode)){
-            printf("%s  %lldB\n", dir->d_name, file_stat.st_size);
+            printf("%s  %lld\n", dir->d_name, file_stat.st_size);
             total_size += file_stat.st_size;
         }
     }
 
-    printf("\nTotal size of files in this directory is: %lld\n\n", total_size);
+    printf("\nTotal size: %lld\n\n", total_size);
 
 
 

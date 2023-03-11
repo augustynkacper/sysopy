@@ -76,9 +76,9 @@ void sys_version(){
 
 }
 
-void print_time(clock_t start, clock_t end, FILE *f){
-    printf("Execution time: %f\n", (double)(end - start) / CLOCKS_PER_SEC);
-    fprintf(f,"Execution time: %f\n", (double)(end - start) / CLOCKS_PER_SEC);
+void print_time(clock_t start, clock_t end, FILE *f, char* v){
+    printf("%s execution time: %f\n", v, (double)(end - start) / CLOCKS_PER_SEC);
+    fprintf(f,"%s execution time: %f\n", v, (double)(end - start) / CLOCKS_PER_SEC);
 }
 
 int main(int argc, char *argv[]){
@@ -96,13 +96,13 @@ int main(int argc, char *argv[]){
     sys_start = clock();
     sys_version();
     sys_end = clock();
-    print_time(sys_start, sys_end, results_file);
+    print_time(sys_start, sys_end, results_file, "sys");
 
     // lib version
     lib_start = clock();
     lib_version();
     lib_end = clock();
-    print_time(lib_start, lib_end, results_file);
+    print_time(lib_start, lib_end, results_file, "lib");
 
     
     fclose(results_file);

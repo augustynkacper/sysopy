@@ -1,0 +1,2 @@
+blocks of size 1 execution time: 0.005134
+blocks of size 1024 execution time: 0.004758
