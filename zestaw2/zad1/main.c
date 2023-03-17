@@ -37,9 +37,13 @@ void lib_version(){
     r_f = fopen(read_file, "r");
     w_f = fopen(write_file, "w");
 
-    if (r_f == NULL || w_f == NULL){
-        printf("Couldn't open a file!\n");
-        exit(0);
+    if (r_f==NULL){
+        fclose(w_f);
+    }
+
+    if (r_f==NULL || w_f==NULL){
+        printf("Couldnt open a file! (lib version)\n");
+        return;
     }
 
     char c;
@@ -60,9 +64,17 @@ void sys_version(){
     r_f = open(read_file, O_RDONLY);
     w_f = open(write_file, O_WRONLY);
 
-    if ( r_f<0 || w_f<0){
-        printf("Couldn't open a file!\n");
+
+    if (r_f<0){
+        close(w_f);
+        printf("Couldnt open a file!\n");
         return;
+    }
+
+    if (w_f<0){
+        creat("out.txt", 0666);
+        w_f = open("out.txt", O_WRONLY);
+        printf("out.txt created...\n");
     }
 
     char c;
@@ -73,11 +85,14 @@ void sys_version(){
             write(w_f, &c, 1);
     }
 
+    close(w_f);
+    close(r_f);
+
 
 }
 
 void print_time(clock_t start, clock_t end, FILE *f, char* v){
-    printf("%s execution time: %f\n", v, (double)(end - start) / CLOCKS_PER_SEC);
+    //printf("%s execution time: %f\n", v, (double)(end - start) / CLOCKS_PER_SEC);
     fprintf(f,"%s execution time: %f\n", v, (double)(end - start) / CLOCKS_PER_SEC);
 }
 
@@ -92,17 +107,19 @@ int main(int argc, char *argv[]){
     FILE *results_file;
     results_file = fopen("pomiar_zad_1.txt", "w");
 
+    // lib version
+    lib_start = clock();
+    lib_version();
+    lib_end = clock();
+    print_time(lib_start, lib_end, results_file, "lib");
+
     // sys version
     sys_start = clock();
     sys_version();
     sys_end = clock();
     print_time(sys_start, sys_end, results_file, "sys");
 
-    // lib version
-    lib_start = clock();
-    lib_version();
-    lib_end = clock();
-    print_time(lib_start, lib_end, results_file, "lib");
+    
 
     
     fclose(results_file);

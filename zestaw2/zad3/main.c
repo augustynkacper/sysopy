@@ -11,6 +11,11 @@ int main(){
 
     DIR *open_dir = opendir(".");
 
+    if (open_dir == NULL) {
+        printf("Couldnt open a current directory!\n");
+        return 0;
+    }
+
     struct dirent* dir;
     struct stat file_stat;
 
@@ -31,6 +36,7 @@ int main(){
     printf("\nTotal size: %lld\n\n", total_size);
 
 
-
+    closedir(open_dir);
+    
     return 0;
 }

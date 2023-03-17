@@ -22,9 +22,8 @@ int main(int argc, char* argv[]){
         return 0;
     }
 
-    int error = ftw(argv[1], check_file, 16);
 
-    if (error==-1){
+    if (ftw(argv[1], check_file, 16)==-1){
         printf("Error while searching given directory!\n");
         return 0;
     }

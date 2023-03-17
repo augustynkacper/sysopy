@@ -1,8 +1,9 @@
 
-
+CC = gcc
+CFLAGS = -Wall
 
 compile:
-	@gcc -Wall main.c -o reverse 
+	@$(CC) $(CFLAGS) main.c -o reverse 
 	@echo "To run:"
 	@echo "./reverse [in_file] [out_file]"
 
@@ -10,10 +11,10 @@ compile:
 
 test:
 	@echo "testing file reversing"
-	@gcc -Wall main.c -o reverse 
-	@./reverse base_file.txt out.txt
-	@./reverse out.txt comp.txt
-	@diff -s comp.txt base_file.txt 
+	@$(CC) $(CFLAGS) main.c -o reverse 
+	@./reverse Cat03.jpg out6.jpg
+	@./reverse out6.jpg comp.jpg
+	@diff -s comp.jpg Cat03.jpg 
 
 
 clean:

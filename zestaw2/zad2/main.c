@@ -12,7 +12,7 @@ char *read_file;
 char *write_file;
 
 void print_time(clock_t start, clock_t end, FILE *f, char* v){
-    printf("%s execution time: %f\n", v, (double)(end - start) / CLOCKS_PER_SEC);
+    //printf("%s execution time: %f\n", v, (double)(end - start) / CLOCKS_PER_SEC);
     fprintf(f,"%s execution time: %f\n", v, (double)(end - start) / CLOCKS_PER_SEC);
 }
 
@@ -32,11 +32,17 @@ void reverse(int block_size){
     read = fopen(read_file, "r");
     write = fopen(write_file, "w");
 
+    if (read==NULL){
+        fclose(write);
+    }
+
     if (read==NULL || write==NULL){
         printf("Couldn't open a file!\n");
         return;
     }
 
+
+    
 
     char buffer[block_size+1];
 
@@ -49,7 +55,7 @@ void reverse(int block_size){
 
     // get number of blocks of given size
     int blocks = (pos+1)/block_size ;
-    int end;
+    int size_read;
 
     for (int i=blocks; i>=0; i--){
 
@@ -58,16 +64,17 @@ void reverse(int block_size){
 
         // count how many chars were read, and 
         // mark and of string
-        end = fread(buffer, sizeof(char), block_size, read);
-        buffer[end] = 0;
+        size_read = fread(buffer, sizeof(char), block_size, read);
 
         // read from end
-        for(int j=strlen(buffer)-1; j>=0; j--){
+        for(int j=size_read-1; j>=0; j--){
             //printf("%c", buffer[j]);
             fwrite(&buffer[j], 1, 1, write);
         }
     }
 
+    fclose(read);
+    fclose(write);
     //printf("\n\n");
 }
 
@@ -86,7 +93,7 @@ int main(int argc, char *argv[]){
     size_1_end = clock();
 
     size_1024_start = clock();
-    reverse(1);
+    reverse(1024);
     size_1024_end = clock();
 
 
@@ -96,6 +103,8 @@ int main(int argc, char *argv[]){
     print_time(size_1_start, size_1_end, results_file, "blocks of size 1");
     print_time(size_1024_start, size_1024_end, results_file, "blocks of size 1024");
 
+    fclose(results_file);
+    
     return 0;
 }
 
