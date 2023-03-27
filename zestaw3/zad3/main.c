@@ -6,66 +6,97 @@
 #include <unistd.h>
 
 
-void search(char *path){
 
-    struct stat statbuf;
-    DIR *dirp;
+char to_find[255];
+int to_find_size;
+
+void search_in_file(char *path){
+
+    FILE* file = fopen(path, "r");
+
+    if (file == NULL){
+        printf("  Couldnt open a file!\n");
+        return;
+    }
+
+    char buffer[to_find_size];
+    size_t size_read; 
+
+    size_read=fread(buffer, sizeof(char), to_find_size, file);
+
+    if (size_read <0 ){
+        printf("Could read a file %s\n", path);
+        return;
+    }
+    
+    // check first letters
+    for(int i=0; i<to_find_size; i++){
+        if (buffer[i]!=to_find[i])
+            return;
+    }
+
+    printf("%s %d\n", path, getpid());
+    fclose(file);
+}
+
+void search(char* path){
+
+    DIR* dirp;
     struct dirent* dir;
 
-    printf(" %s\n", path);
+    struct stat statbuf;
 
     dirp = opendir(path);
 
-    while ( (dir=readdir(dirp)) != NULL){
-        stat(dir->d_name, &statbuf);
+    while ((dir = readdir(dirp))!=NULL){
 
-        if (!S_ISDIR(statbuf.st_mode)){
-            if (strcmp(dir->d_name, ".")==0 || strcmp(dir->d_name, "..")==0 )
+        // create full path to a file
+        char new_path[1024];
+        sprintf(new_path, "%s/%s", path, dir->d_name);
+
+        // check if it is a directory
+        if (stat(new_path, &statbuf)==0 && S_ISDIR(statbuf.st_mode)){
+            
+            // ignore "." and ".."
+            if (strcmp(dir->d_name, ".")==0 || strcmp(dir->d_name, "..")==0)
                 continue;
-            
-            if ( fork() == 0 ){
-               
-            
-                char new_path[1024]="";
-                strcat(new_path, path);
-                strcat(new_path, "/");
-                strcat(new_path, dir->d_name);
-                search(new_path);
 
-                exit(0);
+            pid_t process_id = fork();
+
+            if (process_id ==0){
+                 // call searching for new directory
+                search(new_path);
+                return;
+            } else{
+                wait( NULL );
             }
-            wait(NULL);
-            
-            //search(new_path);
+        } else {
+            search_in_file(new_path);
         }
+
     }
 
-
-
-
-
-
+    closedir(dirp);
+    
 }
-
 
 
 int main(int argc, char* argv[]){
 
-    if (argc!=3){
+
+    if (argc != 3){
         printf("Program accepts exactly 2 arguments!\n");
         return 0;
     }
 
     if (strlen(argv[2]) > 255){
-        printf("Second argument too long!\n");
+        printf("Entered string is too long!\n");
         return 0;
     }
 
+    strcpy(to_find, argv[2]);
+    to_find_size = strlen(to_find);
+
     search(argv[1]);
-
-    
-
-
-
-
+    return 0;
 }

@@ -16,24 +16,24 @@ int main(int argc, char* argv[]){
     int no_proc = atoi(argv[1]);
 
     if (no_proc == 0){
-        printf("pass integer only argument!\n");
+        printf("pass correct argument!\n");
         return 0;
     }
 
 
-    int pid, ppid;
+    int pid;
 
     for (int i=0; i<no_proc; i++){
 
         pid = fork();
 
         if (pid == 0){
-            printf("%d %d\n", getppid(), getpid());
+            printf("parent:%d current:%d\n", getppid(), getpid());
             return 0;
         }
     }
     while (wait(0) > 0);
-    printf("%d\n", no_proc);
+    printf("number of processes: %d\n", no_proc);
 
     return 0;
 }
