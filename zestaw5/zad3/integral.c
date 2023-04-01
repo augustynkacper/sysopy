@@ -7,19 +7,32 @@
 
 #define BUFF_SIZE 128
 
-long double f(long double x){
-    return 4/(x*x+1);
+double f(double a, double b, double width){
+    double res = 0.0;
+
+    while (a<b){
+        
+        if (a+width>b){
+            res += (b-a)*4/(a*a+1); 
+        } else {
+            res += width*4/(a*a+1);
+        }
+        a += width;
+    }
+
+    return res;
 }
 
 // first argument - width of rectangle
 // second argument - x
 int main(int argc, char** argv){
-    long double width = strtod(argv[1], NULL);
-    long double x = strtod(argv[2], NULL);
+    double a = strtod(argv[1], NULL);
+    double b = strtod(argv[2], NULL);
+    double width = strtod(argv[3], NULL);
 
-    long double value = f(x)*width;
+    double value = f(a, b, width);
     char buff[BUFF_SIZE];
-    snprintf(buff, BUFF_SIZE, "%Lf", value);
+    snprintf(buff, BUFF_SIZE, "%f", value);
 
     //printf("%Lf %s\n", x,buff);
     int fifo = open("pipe", O_WRONLY);

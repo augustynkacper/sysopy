@@ -10,60 +10,75 @@
 #include <sys/stat.h>
 #include <string.h>
 
-
-char arg_x[124];
+#define BUFF_SIZE 128
+char arg_a[BUFF_SIZE], arg_b[BUFF_SIZE];
 
 int main(int argc, char** argv){
 
+    // structures for counting the execution time
+    struct timespec start, end, elapsed;
+    clock_gettime(CLOCK_REALTIME, &start);
 
-    // get rectangle width
-    long double width;
-    width = strtold(argv[1], NULL);
+    // get rectangle width and number of child processes
+    double width = strtold(argv[1], NULL);
+    int n = atoi(argv[2]);
 
-    // create pipe array of rectangles_number length
-    int n = (int)(1/width);
 
-    printf("n: %d, width: %Lf\n", n, width);
+    double range_length = 1.0/n;
+    double a = 0.0;
 
-    long double x = 0.0;
-
+    // create a named pipe
     mkfifo("pipe", 0666);
 
+    // start n programs to count integrals on given range
     for (int j=0; j<n; j++){
-        pid_t pid ;
-
         if (!fork()) {
-            snprintf(arg_x, 124, "%Lf", x);
-            execl("./integral", "integral", argv[1], arg_x, NULL);
+            snprintf(arg_a, BUFF_SIZE, "%f", a);
+            snprintf(arg_b, BUFF_SIZE, "%f", a+range_length);
+            execl("./integral", "integral", arg_a, arg_b, argv[1], NULL);
             return 0;
         }
-
-        x += width;
-        
+        a += range_length;
     }
 
-
+    // after integral counted, open a pipe
     int fifo = open("pipe", O_RDONLY);
-    int already_read =0;
+    int read_parts =0;
+    char buf[BUFF_SIZE];
 
-    char buf[128];
-    long double result = 0.0;
-    while (already_read<n){
-        size_t size = read(fifo, buf, 128);
-        buf[size] = 0;
+    double result = 0.0;
+    size_t bytes_read;
 
+    // read from pipe and count result
+    while (read_parts<n){
+
+        bytes_read = read(fifo, buf, BUFF_SIZE);
+        buf[bytes_read] = 0;
 
         char* token;
-
         token = strtok(buf, "\n");
+
         while (token){
             result += strtod(token, NULL);
-            already_read++;
+            read_parts++;
             token = strtok(NULL, "\n");
         }
-       
     }
-    printf("result = %Lf\n", result);
+
+    // count execution time
+    clock_gettime(CLOCK_REALTIME, &end);
+    elapsed.tv_sec = end.tv_sec - start.tv_sec;
+    elapsed.tv_nsec = end.tv_nsec - start.tv_nsec;
+    if (elapsed.tv_nsec < 0){
+        elapsed.tv_sec --;
+        elapsed.tv_nsec += 1000000000L;
+    }
+
+    // print results
+    printf("no_children: %d\n", n);
+    printf("rect_width: %.20lf\n", width);
+    printf("  result: %f\n", result);    
+    printf("  execution time: %ld.%05lds\n", elapsed.tv_sec, elapsed.tv_nsec);
 
     return 0;
 }

@@ -1,0 +1,33 @@
+no_children: 1
+rect_width: 0.00000000200000000000
+  result: 3.141593
+  execution time: 1.688797930s
+
+
+no_children: 2
+rect_width: 0.00000000200000000000
+  result: 3.141592
+  execution time: 0.878630607s
+
+
+no_children: 5
+rect_width: 0.00000000200000000000
+  result: 3.141592
+  execution time: 0.485573256s
+
+
+no_children: 1
+rect_width: 0.00000000100000000000
+  result: 3.141593
+  execution time: 3.464502086s
+
+
+no_children: 2
+rect_width: 0.00000000100000000000
+  result: 3.141592
+  execution time: 1.747902043s
+
+no_children: 5
+rect_width: 0.00000000100000000000
+  result: 3.141592
+  execution time: 0.972139728s
